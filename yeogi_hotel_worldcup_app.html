@@ -1,0 +1,223 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#f53353" />
+  <meta name="description" content="숙소 후보 4곳을 4강, 결승으로 비교해 최종 숙소를 고르는 여기어때 숙소 월드컵 시연용 페이지" />
+  <title>숙소 월드컵 | 여기어때 앱 내 서비스 데모</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Noto+Sans+KR:wght@400;500;600;700;800;900&display=swap');
+    :root{--ink:#20212b;--muted:#777c8b;--line:#e9eaf0;--pink:#f53353;--pinkdark:#d81e41;--light:#fff1f4;--bg:#f7f8fa;--mint:#ecf9f5;--shadow:0 18px 55px rgba(29,32,55,.07)}
+    *{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--bg);color:var(--ink);font-family:'Noto Sans KR','Apple SD Gothic Neo',sans-serif;word-break:keep-all}
+    button,a{font:inherit}button{cursor:pointer}button:focus-visible,a:focus-visible{outline:3px solid #ff8b9e;outline-offset:3px}a{text-decoration:none;color:inherit}
+    .topbar{height:76px;background:#fff;border-bottom:1px solid #f0f0f3;display:flex;align-items:center;justify-content:center;position:sticky;top:0;z-index:15}
+    .topbar-inner{width:min(1180px,calc(100% - 48px));display:flex;align-items:center;justify-content:space-between;gap:16px}
+    .brand{display:flex;align-items:center;gap:11px}.brand-mark{width:36px;height:36px;display:grid;place-items:center;border-radius:12px;background:var(--pink);color:#fff;font-size:19px;font-weight:900;transform:rotate(-5deg)}
+    .brand-name{font-size:24px;font-weight:900;letter-spacing:-1.6px;color:var(--pink)}.brand-sep{height:17px;width:1px;background:#dadce3;margin:0 4px}.brand-small{font-size:12px;font-weight:800;color:#696c77;letter-spacing:.06em}
+    .top-actions{display:flex;align-items:center;gap:11px}.demo-chip{border:1px solid #ffdbe2;background:#fff3f5;color:#be4156;padding:8px 12px;border-radius:999px;font-size:11px;font-weight:800}.top-reset{background:none;border:0;color:#676b77;font-size:12px;font-weight:800;padding:9px}
+    .shell{width:min(1180px,calc(100% - 48px));margin:0 auto;padding-bottom:52px}
+    .hero{position:relative;overflow:hidden;background:linear-gradient(110deg,#ffeff2 1%,#fff 59%,#fff0f0 100%);border:1px solid #ffe4e9;border-radius:26px;padding:31px 42px 30px;margin-top:30px;min-height:178px;display:flex;justify-content:space-between;align-items:center;gap:20px}
+    .hero::before,.hero::after{content:"";position:absolute;border-radius:50%;pointer-events:none}.hero::before{width:275px;height:275px;border:45px solid rgba(252,115,137,.13);right:-50px;top:-130px}.hero::after{width:120px;height:120px;border:25px solid rgba(248,102,130,.08);right:180px;bottom:-93px}
+    .eyebrow{display:flex;align-items:center;gap:8px;color:var(--pink);font-size:12px;font-weight:900;letter-spacing:.035em}.eyebrow-line{width:22px;height:2px;background:var(--pink)}
+    h1{font-size:34px;line-height:1.38;letter-spacing:-1.65px;margin:10px 0 9px;font-weight:900}h1 span{color:var(--pink)}.hero p{font-size:13px;color:#7e7580;line-height:1.8;margin:0}
+    .hero-art{position:relative;z-index:1;width:175px;height:112px;flex:0 0 175px}.hero-card{position:absolute;width:115px;height:99px;border-radius:17px;background:#fff;box-shadow:0 12px 25px rgba(164,56,87,.13);display:flex;align-items:center;justify-content:center;font-size:44px;border:1px solid #fff}.hero-card:first-child{left:1px;top:0;transform:rotate(-13deg)}.hero-card:nth-child(2){right:2px;bottom:0;transform:rotate(12deg)}.hero-star{position:absolute;right:53px;top:11px;font-size:23px;z-index:3;color:#f53353;transform:rotate(18deg)}
+    .stage-panel{margin:25px 0 18px;padding:20px 26px;border:1px solid var(--line);border-radius:22px;background:#fff;display:flex;align-items:center;justify-content:space-between;gap:20px}
+    .stage-name{font-size:13px;color:var(--muted);font-weight:700}.stage-name strong{font-size:18px;color:var(--ink);display:block;margin-top:4px;letter-spacing:-.7px}.stage-steps{display:flex;align-items:center;gap:8px;flex:0 1 540px}.step{flex:1;min-width:0;text-align:center}.step-top{font-size:10px;color:#abb0bb;font-weight:800;margin-bottom:8px;white-space:nowrap}.step-bar{height:6px;background:#e9eaf0;border-radius:10px}.step.active .step-top,.step.done .step-top{color:var(--pink)}.step.active .step-bar,.step.done .step-bar{background:var(--pink)}
+    .match-intro{text-align:center;padding:12px 0 24px}.round-pill{display:inline-flex;background:var(--light);color:var(--pink);font-weight:900;font-size:11px;padding:7px 13px;border-radius:999px}.match-intro h2{font-size:25px;letter-spacing:-1px;line-height:1.5;margin:10px 0 6px;font-weight:900}.match-intro p{font-size:13px;color:var(--muted);margin:0;line-height:1.7}
+    .compare-wrap{position:relative;display:grid;grid-template-columns:1fr 1fr;gap:24px}.hotel{min-width:0;background:#fff;border:1px solid #e9eaf0;border-radius:23px;overflow:hidden;box-shadow:var(--shadow);transition:transform .2s,box-shadow .2s}.hotel:hover{transform:translateY(-3px);box-shadow:0 24px 65px rgba(29,32,55,.11)}
+    .photo{height:204px;position:relative;background:linear-gradient(125deg,#b6cbcf,#eae1d4);background-size:cover;background-position:center;overflow:hidden}.photo::after{content:"";position:absolute;inset:30% 0 0;background:linear-gradient(transparent,rgba(0,0,0,.3))}.photo-placeholder{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:70px;color:#fff4;pointer-events:none}
+    .photo-tag{position:absolute;top:17px;left:18px;z-index:2;background:#fff;color:#555f72;padding:7px 11px;border-radius:8px;font-size:10px;font-weight:900;box-shadow:0 4px 10px #0001}.photo-index{position:absolute;right:17px;bottom:15px;z-index:2;background:#0006;color:#fff;border:1px solid #fff5;padding:5px 9px;border-radius:7px;font-size:11px;font-weight:800}
+    .hotel-body{padding:21px 23px 22px}.hotel-sub{color:#868b96;font-size:11px;font-weight:700}.hotel-title{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:4px 0 9px}.hotel-title h3{font-size:22px;line-height:1.42;letter-spacing:-.9px;margin:0;font-weight:900}.rating{display:flex;align-items:center;gap:4px;white-space:nowrap;font-size:12px;color:#555d6c;font-weight:900}.rating .star{color:#ffb237;font-size:14px}
+    .summary{font-size:12px;line-height:1.7;color:#7d8191;min-height:41px;margin:0 0 13px}.hotel-rows{padding:1px 0 0;border-top:1px solid #f0f0f3}.hotel-row{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;padding:12px 0;border-bottom:1px solid #f4f4f6;font-size:12px}.row-key{color:#898d99;white-space:nowrap;font-weight:600}.row-val{text-align:right;color:#424756;font-weight:800}.row-val.accent{color:var(--pink)}
+    .cost-line{display:flex;align-items:flex-end;justify-content:space-between;gap:8px;margin:15px 0 17px}.cost-help{color:#9b9eaa;font-size:10px;line-height:1.7}.price{font-size:25px;letter-spacing:-1.25px;font-weight:900;line-height:1.2}.price small{font-size:12px;font-weight:800;margin-left:2px;color:#727684;letter-spacing:0}
+    .choose{border:0;border-radius:12px;display:flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:15px 12px;background:var(--pink);color:white;font-weight:900;font-size:14px;transition:background .2s,transform .2s}.choose:hover{background:var(--pinkdark)}.choose:active{transform:scale(.985)}.choose svg{width:17px;height:17px}
+    .vs{position:absolute;left:50%;top:245px;z-index:4;transform:translate(-50%,-50%) rotate(-10deg);display:grid;place-items:center;width:60px;height:60px;border-radius:50%;border:5px solid var(--bg);background:#232530;color:#fff;font-family:'DM Sans',sans-serif;font-size:17px;font-style:italic;font-weight:900;box-shadow:0 8px 23px #0002}
+    .help{margin:22px auto 0;max-width:950px;background:#fff;border:1px solid #eaeaf0;border-radius:15px;padding:15px 19px;display:flex;align-items:center;gap:10px;color:#7b7f8d;font-size:11px;line-height:1.8}.help-icon{flex-shrink:0;display:grid;place-items:center;width:25px;height:25px;border-radius:50%;background:#f0f1f4;color:#757d90;font-size:14px;font-weight:900}
+    .result{max-width:780px;margin:0 auto}.result-head{text-align:center;padding:22px 0}.result-head h2{font-size:32px;letter-spacing:-1.6px;margin:13px 0 7px}.result-head p{font-size:13px;color:var(--muted);line-height:1.8}.result-trophy{font-size:44px;display:block;margin-bottom:3px}
+    .result-card{background:#fff;border:1px solid var(--line);border-radius:25px;overflow:hidden;box-shadow:var(--shadow)}.result-image{height:255px;background-position:center;background-size:cover;background-color:#eaded5;position:relative}.result-badge{position:absolute;left:20px;top:20px;background:var(--pink);color:#fff;padding:9px 14px;border-radius:999px;font-size:12px;font-weight:900}.result-info{padding:24px 30px 28px}.result-info h3{margin:3px 0 6px;font-size:27px;letter-spacing:-1px}.result-info .description{color:#7b7e8a;font-size:12px;line-height:1.7}.result-attributes{display:flex;gap:8px;flex-wrap:wrap;margin:19px 0}.attribute{border-radius:9px;background:#f7f8fa;padding:9px 11px;color:#565b6a;font-size:11px;font-weight:800}.result-footer{display:flex;align-items:center;justify-content:space-between;gap:15px;border-top:1px solid var(--line);padding-top:20px}.result-footer .choose{width:auto;min-width:222px;padding:13px 18px}.result-price{font-size:25px;font-weight:900;letter-spacing:-1px}.result-price small{font-size:11px;color:var(--muted);font-weight:600;margin-left:4px}.result-reset{display:block;width:max-content;margin:20px auto;border:0;background:transparent;color:#6e7383;font-size:13px;font-weight:800;text-decoration:underline;text-underline-offset:4px;padding:10px}
+    .tipbox{border:1px solid #f6dfe4;background:#fff4f6;border-radius:17px;margin:22px 0 0;padding:17px 22px;font-size:12px;line-height:1.9;color:#805a65}.tipbox strong{color:#d92c4c}
+    .footer{text-align:center;color:#afb2bd;font-size:11px;padding:8px 0 27px;line-height:1.8}
+    .toast{position:fixed;z-index:30;left:50%;bottom:30px;transform:translate(-50%,30px);border-radius:12px;background:#252936;color:#fff;padding:12px 20px;font-size:12px;font-weight:800;box-shadow:0 8px 30px #0002;opacity:0;pointer-events:none;transition:.3s}.toast.show{opacity:1;transform:translate(-50%,0)}
+    @media(max-width:770px){.topbar{height:65px}.topbar-inner,.shell{width:calc(100% - 28px)}.brand-name{font-size:21px}.brand-small{font-size:10px}.demo-chip{font-size:9px;padding:6px 9px}.top-reset{font-size:11px}.hero{margin-top:18px;padding:26px 23px;min-height:170px}.hero h1{font-size:26px}.hero-art{width:90px;flex-basis:90px;transform:scale(.68);transform-origin:center right;margin-left:-40px}.stage-panel{margin:16px 0;padding:16px 15px;display:block}.stage-name{margin-bottom:16px}.stage-name strong{font-size:16px}.stage-steps{width:100%}.match-intro{padding:9px 0 18px}.match-intro h2{font-size:21px}.compare-wrap{gap:12px}.hotel-body{padding:15px 13px 16px}.photo{height:145px}.photo-tag{font-size:9px;top:10px;left:9px}.photo-index{font-size:9px;right:8px;bottom:9px}.hotel-title{display:block}.hotel-title h3{font-size:16px;min-height:46px}.rating{margin-top:4px;font-size:11px}.summary{min-height:60px;font-size:10px}.hotel-row{display:block;font-size:10px;padding:9px 0}.row-key{display:block;margin-bottom:4px}.row-val{display:block;text-align:left}.price{font-size:19px}.cost-line{display:block}.cost-help{display:block;margin-bottom:4px;font-size:9px}.choose{font-size:12px;padding:12px 8px}.vs{top:173px;width:43px;height:43px;border-width:4px;font-size:13px}.help{font-size:10px;padding:12px}.result-head h2{font-size:25px}.result-image{height:190px}.result-info{padding:19px}.result-info h3{font-size:22px}.result-footer .choose{min-width:0;width:52%;font-size:11px}.result-price{font-size:20px}.result-price small{display:block}.tipbox{font-size:11px;padding:15px}.footer{font-size:10px}}
+    @media(max-width:420px){.brand-sep,.brand-small{display:none}.hero-art{display:none}.hero{min-height:0}.compare-wrap{gap:8px}.hotel-body{padding:12px 9px}.hotel-title h3{font-size:15px}.photo{height:122px}.photo-tag{font-size:8px}.hotel-row{font-size:9px}.summary{font-size:9px;min-height:62px}.choose{font-size:11px}.vs{top:145px}.stage-panel{padding:14px 11px}.result-attributes{gap:6px}.attribute{font-size:10px;padding:8px}}
+
+    /* 숙소별 두 가지 평점의 시연용 후기 */
+    .reviews{margin:15px 0 14px;padding:13px 14px;border:1px solid #ececf1;border-radius:13px;background:#fafafb}.reviews-head{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:10px}.reviews-head strong{font-size:12px}.reviews-head span{font-size:10px;color:#9599a5}.review{display:flex;align-items:flex-start;gap:10px;padding:9px 0;border-top:1px solid #ecedf1}.review-score{color:#ec8d00;background:#fff4dd;border-radius:6px;padding:4px 6px;white-space:nowrap;font-size:10px;font-weight:900}.review-author{color:#696e7c;font-size:10px;font-weight:800}.review p{font-size:11px;line-height:1.6;color:#515767;margin:3px 0 0}
+    .coupon-banner{display:flex;align-items:center;gap:11px;margin:22px 0 19px;padding:16px 15px;background:linear-gradient(110deg,#fff1f4,#fff8ed);border:1px solid #ffdce5;border-radius:15px}.coupon-icon{font-size:25px;flex:0 0 auto}.coupon-banner div{flex:1;min-width:0}.coupon-banner strong{color:#d9274b;font-size:14px;font-weight:900}.coupon-banner p{font-size:10px;line-height:1.7;color:#8d6c74;margin:4px 0 0}.coupon-mini{font-size:11px;color:#e22a4b;font-weight:900;white-space:nowrap}.before-price{font-size:13px;color:#9ca0ac;font-weight:600}.booking-hotel{display:flex;align-items:center;gap:18px;padding:22px 24px;border-bottom:1px solid var(--line)}.booking-thumb{height:100px;width:135px;flex:0 0 135px;border-radius:12px;background-size:cover;background-position:center}.booking-hotel h3{font-size:21px;letter-spacing:-.8px;margin:5px 0}.booking-hotel p{font-size:11px;color:#898d9b;margin:0}.booking-body{padding:0 25px 24px}.booking-line{display:flex;justify-content:space-between;gap:16px;padding:13px 2px;color:#777c89;font-size:12px}.booking-line strong{color:#424755}.booking-line.discount,.booking-line.discount strong{color:var(--pink)}.booking-total{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:20px 2px;margin:6px 0 15px;border-top:1px solid var(--line);font-size:13px;font-weight:900}.booking-total strong{font-size:26px;color:var(--pink)}.demo-notice{font-size:10px;color:#969ba6;text-align:center;line-height:1.7;margin-bottom:16px}.finish-retry{max-width:260px;margin:25px auto 0}
+    @media(max-width:770px){.reviews{padding:10px 8px}.reviews-head{display:block}.reviews-head span{display:block;margin-top:3px}.review{gap:5px}.review-score{font-size:9px;padding:3px 4px}.review p{font-size:10px}.coupon-banner{padding:12px;gap:8px;flex-wrap:wrap}.coupon-banner strong{font-size:12px}.booking-hotel{padding:15px;gap:12px}.booking-thumb{height:75px;width:90px;flex-basis:90px}.booking-hotel h3{font-size:16px}.booking-body{padding:0 16px 18px}.booking-total strong{font-size:22px}}
+    @media(max-width:420px){.hotel .reviews{padding:7px 5px}.hotel .reviews-head strong{font-size:10px}.hotel .reviews-head span{font-size:8px}.hotel .review{display:block}.hotel .review-score{display:inline-block;font-size:9px}.hotel .review-author{margin-left:4px;font-size:9px}.hotel .review p{font-size:9px}.result-footer{flex-wrap:wrap}.result-footer .choose{width:100%}.coupon-mini{font-size:10px}}
+    @media(prefers-reduced-motion:reduce){*,*:before,*:after{animation-duration:.001ms!important;transition-duration:.001ms!important;scroll-behavior:auto!important}}
+
+    /* 레퍼런스 기반: 여기어때 앱처럼 가볍고 선명한 화이트·코랄 UI */
+    :root{--ink:#25232b;--muted:#85818a;--line:#f0ebef;--pink:#ff375d;--pinkdark:#e7234b;--light:#fff0f3;--bg:#faf9fb;--shadow:0 8px 30px rgba(50,32,50,.045)}
+    body{background:var(--bg)}
+    .topbar{height:68px;border-bottom:1px solid #f5e8ec;box-shadow:0 3px 20px rgba(54,23,35,.025)}
+    .brand-name{font-size:25px;letter-spacing:-1.65px}.brand-mark{border-radius:10px;background:#ff375d;transform:none;width:34px;height:34px}
+    .demo-chip{background:#fff4f5;color:#f02e55;border:1px solid #ffe3e9;padding:8px 12px}
+    .shell{max-width:1080px;padding-bottom:70px}
+    .hero{margin-top:23px;min-height:180px;padding:29px 42px;background:linear-gradient(112deg,#ffebf0 0%,#fff6f6 62%,#ffedf1 100%);border:0;border-radius:20px}
+    .hero::before{border-color:rgba(255,84,119,.085)}.hero::after{border-color:rgba(255,84,119,.07)}
+    .eyebrow{font-size:12px;letter-spacing:0}.hero h1{font-size:32px;line-height:1.42;margin:9px 0}.hero p{font-size:12px;color:#806e75}
+    .hero-card{border:2px solid white;border-radius:18px;box-shadow:0 12px 30px #b8395520}
+    .stage-panel{border:0;border-radius:18px;margin:18px 0 12px;padding:17px 24px;box-shadow:var(--shadow)}
+    .stage-name{font-size:11px}.stage-name strong{font-size:17px}.stage-steps{flex-basis:490px}
+    .step-bar{height:5px}.step-top{font-size:11px}.match-intro{padding:14px 0 12px}.match-intro h2{font-size:23px;margin:11px 0 5px}.match-intro p{font-size:12px}
+    .round-pill{background:#ffe7ed;color:#f62f58;border-radius:7px;font-size:11px;padding:7px 11px}
+    .match-perk{width:fit-content;max-width:100%;margin:0 auto 19px;padding:9px 15px;background:#fff;color:#785d68;border:1px solid #ffe1e8;border-radius:99px;font-size:11px;text-align:center}
+    .match-perk strong{color:#ed3152}
+    .compare-wrap{gap:18px}.hotel{border:1px solid #f0ecf0;border-radius:18px;box-shadow:0 8px 30px #241a2408}
+    .hotel:hover{box-shadow:0 18px 40px #241a2412}.photo{height:216px}.photo-placeholder{opacity:.52;filter:grayscale(.65)}.photo-tag{top:13px;left:15px;border-radius:6px;padding:8px 10px;color:#f53459}.photo-index{font-size:10px}
+    .hotel-body{padding:20px 23px 23px}.hotel-sub{color:#88838d}.hotel-title{margin:3px 0 7px}.hotel-title h3{font-size:20px;letter-spacing:-.7px}
+    .rating{font-size:12px;gap:3px}.rating-count{font-size:10px;font-weight:500;color:#a5a0a8}.rating .star{color:#ffad30}
+    .summary{font-size:11px;min-height:34px;margin-bottom:11px}.hotel-row{padding:10px 0;font-size:11px}.row-key{color:#8e8891}.row-val{color:#454049}
+    .reviews{background:#fbfafb;border:1px solid #f1edf0;border-radius:11px;padding:12px 14px;margin:12px 0 10px}
+    .reviews-head{margin-bottom:7px}.reviews-head strong{font-size:12px}.reviews-head span{font-size:9px}
+    .review{padding:8px 0}.review-score{background:#fff0d7;color:#e89416;border-radius:5px;font-size:10px}
+    .review:has(.review-score){align-items:center}.review p{font-size:11px}.review-author{font-size:10px}
+    .cost-line{margin:14px 0 15px}.price{font-size:25px;color:#282630}.cost-help{font-size:10px}
+    .choose{background:#ff375d;border-radius:10px;padding:15px 12px;font-size:13px}.choose:hover{background:#e6254c}
+    .vs{top:242px;background:white;color:#f12e55;border:5px solid #faf9fb;width:58px;height:58px;font-size:17px;box-shadow:0 6px 18px #9e627a22}
+    .result-head{padding:20px 0}.result-head h2{font-size:28px}.result-card{border:1px solid #f0ebee;border-radius:18px;box-shadow:var(--shadow)}
+    .result-badge{background:#ff375d}.coupon-banner{background:linear-gradient(98deg,#fff1f4,#fff6ee);border:1px solid #ffdce4}
+    .coupon-banner strong{font-size:15px}.coupon-mini{background:#ff375d;color:white;border-radius:6px;padding:7px 9px}
+    .result-price{color:#f12f57}.before-price{color:#a6a0aa}.tipbox{background:white;border:1px solid #f0ecf0}
+    .help{max-width:100%;border:0;background:#f3f1f3;border-radius:12px;color:#85808a}
+    @media(max-width:770px){
+      .shell,.topbar-inner{width:calc(100% - 24px)}.topbar{height:61px}.brand-name{font-size:21px}.brand-mark{width:29px;height:29px;font-size:16px}.top-reset{font-size:10px}.demo-chip{font-size:9px;padding:6px 8px}
+      .hero{margin-top:11px;padding:23px 20px;min-height:155px}.hero h1{font-size:25px}.hero-art{width:92px;flex-basis:92px;transform:scale(.7)}
+      .stage-panel{padding:16px;margin:12px 0}.stage-name strong{font-size:16px}.match-intro{padding:10px 0}.match-intro h2{font-size:21px}.match-perk{font-size:10px;margin-bottom:13px;padding:9px 11px}
+      .compare-wrap{grid-template-columns:1fr;gap:0;max-width:530px;margin:0 auto}.hotel{border-radius:16px}.photo{height:195px}.hotel-body{padding:17px 17px 19px}
+      .hotel-title{display:flex}.hotel-title h3{font-size:20px;min-height:0}.rating{margin-top:0}.summary{font-size:11px;min-height:0}
+      .hotel-row{display:flex;font-size:11px;padding:9px 0}.row-key,.row-val{display:block}.row-val{text-align:right}.price{font-size:25px}.cost-line{display:flex}.cost-help{font-size:10px}.choose{font-size:13px}
+      .vs{position:relative;left:auto;top:auto;transform:none;margin:-5px auto;z-index:4;border-color:#faf9fb;width:51px;height:51px;font-size:15px;box-shadow:0 3px 13px #9e627a14}
+      .reviews{padding:10px 12px}.reviews-head{display:flex}.review{display:flex}.review p{font-size:11px}.result-info{padding:19px}.result-head h2{font-size:23px}.result-footer{flex-wrap:wrap}.result-footer .choose{width:100%;min-width:0}
+    }
+    @media(max-width:420px){
+      .brand-small,.brand-sep,.hero-art{display:none}.topbar-inner{gap:7px}.top-reset{padding:4px}.brand{gap:7px}
+      .hero{min-height:0;padding:21px 17px}.hero h1{font-size:23px}.hero p{font-size:11px}.stage-panel{padding:14px 11px}.stage-name{margin-bottom:10px}.step-top{font-size:9px}.match-intro h2{font-size:19px}
+      .hotel-body{padding:16px}.photo{height:178px}.hotel-title h3{font-size:19px}.summary{font-size:11px}.rating-count{font-size:9px}
+      .hotel-row{font-size:11px}.row-val{text-align:right}.hotel .reviews{padding:10px 11px}.hotel .reviews-head strong{font-size:11px}.hotel .reviews-head span{font-size:9px}
+      .hotel .review{display:flex}.hotel .review-score{font-size:10px}.hotel .review-author{font-size:10px;margin-left:0}.hotel .review p{font-size:10px}
+      .cost-line{display:flex}.price{font-size:23px}.choose{font-size:12px}.result-footer .choose{width:100%}.coupon-banner strong{font-size:12px}.result-image{height:205px}
+    }
+  </style>
+</head>
+<body>
+<header class="topbar">
+  <div class="topbar-inner">
+    <a class="brand" href="#" id="homeLink" aria-label="숙소 월드컵 처음으로">
+      <span class="brand-mark">여</span><span class="brand-name">여기어때</span><span class="brand-sep"></span><span class="brand-small">HOTEL WORLD CUP</span>
+    </a>
+    <div class="top-actions"><span class="demo-chip">앱 내 서비스 · DEMO</span><button class="top-reset" id="resetTop" type="button">처음부터 ↻</button></div>
+  </div>
+</header>
+<main class="shell">
+  <section class="hero" aria-label="서비스 소개">
+    <div style="position:relative;z-index:2">
+      <div class="eyebrow"><span class="eyebrow-line"></span> 여기어때 숙소 월드컵</div>
+      <h1>내 마음에 쏙 드는 숙소,<br><span>월드컵으로 골라봐!</span></h1>
+      <p>가격·위치·후기·취소 조건까지 꼼꼼하게 비교!<br>지금 선택하면 시크릿 쿠폰까지 기다리고 있어요.</p>
+    </div>
+    <div class="hero-art" aria-hidden="true"><div class="hero-card">🏨</div><div class="hero-card">🎟️</div><div class="hero-star">✦</div></div>
+  </section>
+  <div class="stage-panel" aria-label="진행 상황">
+    <div class="stage-name">나의 숙소 월드컵<strong id="stageTitle">4강 · 첫 번째 대결</strong></div>
+    <div class="stage-steps" id="stageSteps"></div>
+  </div>
+  <section id="game" aria-live="polite"></section>
+  <div class="help"><span class="help-icon">i</span><span>QMS 발표용 콘셉트 시연입니다. 숙소·가격·평점·후기·쿠폰은 가상의 예시이며 실제 예약이나 결제는 발생하지 않습니다.</span></div>
+  <div class="footer">QMS 마케팅 프로젝트 · 여기어때 숙소 월드컵 CONCEPT PROTOTYPE · 비공식 시연용</div>
+</main>
+<div class="toast" id="toast" role="status"></div>
+<script>
+  'use strict';
+  // 후기는 시연용 예시이며 실제 숙소 리뷰가 아닙니다.
+  const sampleReviews = {
+    1:[{score:5,author:'여행객 A',text:'역이 가까워 이동하기 편했고, 조식도 만족스러웠어요.'},{score:3,author:'여행객 B',text:'객실은 깔끔했지만 밤에는 복도 소음이 조금 들렸어요.'}],
+    2:[{score:5,author:'여행객 C',text:'쇼핑하기 좋은 위치에 객실 컨디션도 기대 이상이었어요.'},{score:3,author:'여행객 D',text:'위치는 좋았지만 조식이 없고 객실이 조금 좁았어요.'}],
+    3:[{score:5,author:'여행객 E',text:'가격에 비해 객실과 조식이 좋아서 만족했어요.'},{score:3,author:'여행객 F',text:'가성비는 좋지만 역까지 조금 걸어야 했어요.'}],
+    4:[{score:5,author:'여행객 G',text:'창밖 풍경이 멋지고 숙소 분위기도 좋았어요.'},{score:3,author:'여행객 H',text:'뷰는 좋지만 주변 식당 선택지가 조금 적었어요.'}]
+  };
+  const couponAmount = 10000; // 가상의 시연용 시크릿 쿠폰
+  const hotels = [
+    {id:1,name:'시부야 라이트 호텔',area:'도쿄 · 시부야',loc:'시부야역 도보 5분',price:138000,rating:'4.8',review:'후기 1,284개',cancel:'체크인 3일 전 무료',breakfast:'조식 포함',room:'디럭스 더블 · 2인',tag:'역세권 추천',desc:'이동 시간을 줄이고 도쿄 곳곳을 여유롭게 둘러보고 싶다면',photo:'https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=1100&q=85',bg:'linear-gradient(135deg,#c4d3d0,#889eac)'},
+    {id:2,name:'긴자 모먼트 스테이',area:'도쿄 · 긴자',loc:'긴자역 도보 3분',price:159000,rating:'4.9',review:'후기 942개',cancel:'체크인 1일 전 무료',breakfast:'조식 불포함',room:'슈페리어 더블 · 2인',tag:'평점 높은 숙소',desc:'쇼핑과 미식을 가까이에서 즐기고 깔끔한 객실을 선호한다면',photo:'https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?auto=format&fit=crop&w=1100&q=85',bg:'linear-gradient(135deg,#cdbdaa,#948775)'},
+    {id:3,name:'우에노 브리즈 호텔',area:'도쿄 · 우에노',loc:'우에노역 도보 7분',price:109000,rating:'4.6',review:'후기 2,013개',cancel:'체크인 5일 전 무료',breakfast:'조식 포함',room:'스탠다드 트윈 · 2인',tag:'가성비 추천',desc:'합리적인 가격과 든든한 조식으로 여행을 시작하고 싶다면',photo:'https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?auto=format&fit=crop&w=1100&q=85',bg:'linear-gradient(135deg,#b0bac7,#7d9e93)'},
+    {id:4,name:'아사쿠사 리버뷰',area:'도쿄 · 아사쿠사',loc:'아사쿠사역 도보 6분',price:126000,rating:'4.7',review:'후기 1,576개',cancel:'체크인 2일 전 무료',breakfast:'조식 불포함',room:'리버뷰 더블 · 2인',tag:'뷰 맛집',desc:'여행지의 분위기를 느끼며 창밖 풍경까지 특별하게 즐기고 싶다면',photo:'https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?auto=format&fit=crop&w=1100&q=85',bg:'linear-gradient(135deg,#abc9d1,#91a6bd)'}
+  ];
+  let seeds = hotels.slice(), winners = [], match = 0, history = [];
+  const $ = id => document.getElementById(id);
+  const money = n => new Intl.NumberFormat('ko-KR').format(n);
+  const esc = s => String(s).replace(/[&<>\"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;',"'":'&#39;'}[c]));
+  const iconArrow = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12 14 0m-6-6 6 6-6 6"/></svg>';
+  const stepNames = ['4강 ①','4강 ②','결승','최종 선택','쿠폰 예약'];
+  function renderStage(){
+    const titles = ['4강 · 첫 번째 대결','4강 · 두 번째 대결','결승 · 마지막 대결','최종 숙소 선택 완료','시크릿 쿠폰 적용 · 예약'];
+    $('stageTitle').textContent=titles[match];
+    $('stageSteps').innerHTML=stepNames.map((s,i)=>`<div class="step ${i<match?'done':i===match?'active':''}"><div class="step-top">${s}</div><div class="step-bar"></div></div>`).join('');
+  }
+  function renderReviews(h){
+    return `<div class="reviews"><div class="reviews-head"><strong>이용 후기 미리보기</strong><span>${esc(h.review)} · 예시 후기</span></div>${sampleReviews[h.id].map(r=>`<div class="review"><span class="review-score">★ ${r.score}.0</span><div><span class="review-author">${esc(r.author)}</span><p>${esc(r.text)}</p></div></div>`).join('')}</div>`;
+  }
+  function hotelCard(h,position){
+    return `<article class="hotel"><div class="photo" style="background-image:url('${h.photo}'),${h.bg},${h.bg};background-color:#b5b7bb"><div class="photo-placeholder" aria-hidden="true">🏨</div><span class="photo-tag">${esc(h.tag)}</span><span class="photo-index">후보 ${position}</span></div>
+      <div class="hotel-body"><div class="hotel-sub">${esc(h.area)}</div><div class="hotel-title"><h3>${esc(h.name)}</h3><div class="rating"><span class="star">★</span>${esc(h.rating)}<span class="rating-count">(${esc(h.review)})</span></div></div><p class="summary">${esc(h.desc)}</p>
+      <div class="hotel-rows"><div class="hotel-row"><span class="row-key">📍 위치</span><span class="row-val">${esc(h.loc)}</span></div><div class="hotel-row"><span class="row-key">↺ 취소</span><span class="row-val accent">${esc(h.cancel)}</span></div><div class="hotel-row"><span class="row-key">☕ 조식</span><span class="row-val">${esc(h.breakfast)}</span></div><div class="hotel-row"><span class="row-key">▤ 객실</span><span class="row-val">${esc(h.room)}</span></div></div>
+      ${renderReviews(h)}
+      <div class="cost-line"><span class="cost-help">1박 / 2인 · 세금 포함</span><div class="price">${money(h.price)}<small>원~</small></div></div>
+      <button class="choose" data-pick="${h.id}" type="button">이 숙소 선택 ${iconArrow}</button></div></article>`;
+  }
+  function renderMatch(){
+    const isFinal=match===2;
+    const pair=isFinal?[winners[0],winners[1]]:[seeds[match*2],seeds[match*2+1]];
+    $('game').innerHTML=`<div class="match-intro"><span class="round-pill">${isFinal?'FINAL ROUND':'ROUND OF 4 · MATCH '+(match+1)}</span><h2>${isFinal?'마지막 두 곳, 최종 선택은?':'두 숙소 중 더 끌리는 곳은?'}</h2><p>${isFinal?'지금까지 고른 숙소 중 마음에 드는 한 곳을 선택해 보세요.':'두 숙소의 조건과 후기를 살펴보고 마음에 드는 곳을 선택하세요.'}</p></div><div class="match-perk">🎟️ <strong>월드컵을 완료하면?</strong> 지금 예약할 때 쓸 수 있는 시크릿 쿠폰이 열려요!</div><div class="compare-wrap">${hotelCard(pair[0],1)}<div class="vs" aria-hidden="true">VS</div>${hotelCard(pair[1],2)}</div>`;
+    document.querySelectorAll('[data-pick]').forEach(el=>el.addEventListener('click',()=>pick(Number(el.dataset.pick))));
+  }
+  function toast(message){const el=$('toast');el.textContent=message;el.classList.add('show');clearTimeout(toast.timer);toast.timer=setTimeout(()=>el.classList.remove('show'),1500)}
+  function pick(id){
+    if(match>2)return;
+    const pair=match===2?[winners[0],winners[1]]:[seeds[match*2],seeds[match*2+1]];
+    const chosen=pair.find(h=>h.id===id);
+    if(!chosen)return;
+    history.push(chosen.id);
+    if(match<2){winners.push(chosen);match++;toast('선택 완료! 다음 대결로 넘어갈게요.');}
+    else {winners.push(chosen);match=3;toast('나의 최종 숙소가 결정됐어요!')}
+    render();
+    scrollToStage();
+  }
+  function renderResult(){
+    const h=winners[2];
+    $('game').innerHTML=`<section class="result"><div class="result-head"><span class="result-trophy" aria-hidden="true">🏆</span><span class="round-pill">MY FINAL PICK</span><h2>나의 최종 숙소가 정해졌어요!</h2><p>고민 끝! 직접 비교해서 고른 나만의 숙소예요.</p></div>
+      <article class="result-card"><div class="result-image" style="background-image:url('${h.photo}'),${h.bg}"><span class="result-badge">🏆 숙소 월드컵 우승</span></div><div class="result-info"><div class="hotel-sub">${esc(h.area)} · <span style="color:#ffb237">★</span> ${esc(h.rating)} (${esc(h.review)})</div><h3>${esc(h.name)}</h3><div class="description">${esc(h.desc)}</div><div class="result-attributes"><span class="attribute">📍 ${esc(h.loc)}</span><span class="attribute">↺ ${esc(h.cancel)}</span><span class="attribute">☕ ${esc(h.breakfast)}</span><span class="attribute">▤ ${esc(h.room)}</span></div>${renderReviews(h)}
+      <div class="coupon-banner"><span class="coupon-icon">🎟️</span><div><strong>지금 예약하면 시크릿 쿠폰 적용!!</strong><p>월드컵 최종 선택 혜택 · 시연용 시크릿 쿠폰 10,000원 할인</p></div><span class="coupon-mini">-10,000원</span></div>
+      <div class="result-footer"><div class="result-price"><s class="before-price">${money(h.price)}원</s><br>${money(h.price-couponAmount)}원<small>쿠폰 적용 시 · 1박 예시</small></div><button class="choose" id="startBooking" type="button">지금 예약하고 쿠폰 적용 ${iconArrow}</button></div></div></article>
+      <div class="tipbox"><strong>월드컵 특별 혜택</strong><br>최종 선택한 숙소의 앱 내 예약 화면으로 이동하면 시크릿 쿠폰이 자동 적용돼요. 본 페이지는 실제 예약·결제가 진행되지 않는 콘셉트 시연입니다.</div><button class="result-reset" id="retry" type="button">↻ 다른 조합으로 다시 하기</button></section>`;
+    $('retry').addEventListener('click',()=>reset(true));
+    $('startBooking').addEventListener('click',()=>{match=4;render();scrollToStage()});
+  }
+  function renderBooking(){
+    const h=winners[2];
+    $('game').innerHTML=`<section class="result"><div class="result-head"><span class="round-pill">APP BOOKING · DEMO</span><h2>예약 정보를 확인해 주세요</h2><p>월드컵에서 고른 숙소의 시크릿 쿠폰이 자동 적용됐어요.</p></div>
+      <article class="result-card"><div class="booking-hotel"><div class="booking-thumb" style="background-image:url('${h.photo}'),${h.bg}"></div><div><div class="hotel-sub">${esc(h.area)} · ★ ${esc(h.rating)}</div><h3>${esc(h.name)}</h3><p>${esc(h.room)} · 1박 기준 예시</p></div></div>
+      <div class="booking-body"><div class="coupon-banner"><span class="coupon-icon">🎁</span><div><strong>시크릿 쿠폰 적용 완료!</strong><p>숙소 월드컵을 마친 고객만을 위한 시연 혜택</p></div><span class="coupon-mini">적용됨</span></div>
+      <div class="booking-line"><span>숙소 금액</span><strong>${money(h.price)}원</strong></div><div class="booking-line discount"><span>시크릿 쿠폰 할인</span><strong>−${money(couponAmount)}원</strong></div><div class="booking-total"><span>최종 결제 예상 금액</span><strong>${money(h.price-couponAmount)}원</strong></div>
+      <p class="demo-notice">시연용 가상 숙소·가격·쿠폰입니다. 실제 예약이나 결제는 발생하지 않습니다.</p>
+      <button class="choose" id="confirmDemo" type="button">시연 예약 완료하기 ${iconArrow}</button><button class="result-reset" id="backToResult" type="button">← 선택 결과로 돌아가기</button></div></article></section>`;
+    $('confirmDemo').addEventListener('click',()=>{toast('시연 예약이 완료됐어요!');$('game').innerHTML=`<section class="result"><div class="result-head"><span class="result-trophy" aria-hidden="true">🎉</span><span class="round-pill">BOOKING DEMO COMPLETE</span><h2>시연 예약이 완료됐어요!</h2><p>${esc(h.name)} · 시크릿 쿠폰 ${money(couponAmount)}원 적용<br>실제 예약이나 결제가 이루어진 것은 아닙니다.</p><button class="choose finish-retry" id="finishRetry" type="button">숙소 월드컵 다시 하기 ${iconArrow}</button></div></section>`;$('finishRetry').addEventListener('click',()=>reset(true));});
+    $('backToResult').addEventListener('click',()=>{match=3;render();scrollToStage()});
+  }
+  function scrollToStage(){const panel=document.querySelector('.stage-panel');if(panel)panel.scrollIntoView({behavior:'smooth',block:'start'});}
+  function render(){renderStage();if(match<3)renderMatch();else if(match===3)renderResult();else renderBooking()}
+  function reset(shuffle=false){
+    seeds=hotels.slice();
+    if(shuffle){for(let i=seeds.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[seeds[i],seeds[j]]=[seeds[j],seeds[i]]}}
+    winners=[];history=[];match=0;render();
+    window.scrollTo({top:0,behavior:'smooth'});
+  }
+  $('resetTop').addEventListener('click',()=>reset());
+  $('homeLink').addEventListener('click',e=>{e.preventDefault();reset()});
+  render();
+</script>
+</body>
+</html>
